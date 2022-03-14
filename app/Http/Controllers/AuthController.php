@@ -11,10 +11,7 @@ class AuthController extends Controller
 {
     public function login(AuthLoginRequest $request)
     {
-        $data = [
-            'login'    => $request->login,
-            'password' => $request->password
-        ];
+        $data = $request->validated();
 
         if (auth()->attempt($data)) {
             $user = auth()->user();
@@ -28,10 +25,8 @@ class AuthController extends Controller
 
     public function register(AuthRegisterRequest $request)
     {
-        $data = [
-            'login'    => $request->login,
-            'password' => Hash::make($request->password)
-        ];
+        $data = $request->validated();
+        $data['password'] = Hash::make($data['password']);
 
         $user = User::query()->create($data);
 
