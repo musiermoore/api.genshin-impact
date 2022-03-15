@@ -23,3 +23,9 @@ Route::prefix('/auth')->group(function () {
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('/accounts', \App\Http\Controllers\AccountController::class);
+    Route::post('/accounts/{id}/restore', [\App\Http\Controllers\AccountController::class, 'restore']);
+});
+
