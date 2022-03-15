@@ -15,7 +15,7 @@ trait ApiResponses
         return response()->json($response)->setStatusCode($code);
     }
 
-    public function successResponse($code = 200, $message = null, $data = null)
+    public function successResponse($data = null, $message = null, $code = 200)
     {
         $response = [
             'status' => 'success',
