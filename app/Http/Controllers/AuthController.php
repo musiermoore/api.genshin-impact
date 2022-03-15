@@ -17,7 +17,11 @@ class AuthController extends Controller
             $user = auth()->user();
             $token =  $user->createToken('auth-token')->plainTextToken;
 
-            return $this->successResponse(200, 'User logged-in!', ['token' => $token]);
+            $data = [
+                'token' => $token
+            ];
+
+            return $this->successResponse($data, 'User logged-in!');
         }
 
         return $this->errorResponse(401, 'Unauthorised');
@@ -30,13 +34,13 @@ class AuthController extends Controller
 
         $user = User::query()->create($data);
 
-        return $this->successResponse(200, 'User successfully registered!', $user);
+        return $this->successResponse($user, 'User successfully registered!');
     }
 
     public function logout()
     {
         auth()->user()->tokens()->delete();
 
-        return $this->successResponse(200, 'The token has been deleted');
+        return $this->successResponse(null, 'The token has been deleted');
     }
 }
