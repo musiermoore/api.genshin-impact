@@ -24,7 +24,7 @@ class CreateCharacterLevelsTable extends Migration
 
             $table->foreign('character_id')->references('id')->on('characters');
             $table->foreign('level_id')->references('id')->on('levels');
-            $table->foreign('ascension_id')->references('id')->on('ascension');
+            $table->foreign('ascension_id')->references('id')->on('ascensions');
         });
     }
 

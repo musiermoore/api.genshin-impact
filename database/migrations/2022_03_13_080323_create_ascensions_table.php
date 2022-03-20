@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAscensionTable extends Migration
+class CreateAscensionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAscensionTable extends Migration
      */
     public function up()
     {
-        Schema::create('ascension', function (Blueprint $table) {
+        Schema::create('ascensions', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('ascension')->unique();
             $table->timestamps();
