@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ArtifactType extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'type',
+        'slug'
+    ];
 }

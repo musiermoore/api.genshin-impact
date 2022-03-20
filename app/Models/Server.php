@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Server extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'created_at',
+        'updated_at'
+    ];
 }

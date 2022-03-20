@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class CharacteristicType extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'type',
+        'slug',
+        'created_at',
+        'updated_at'
+    ];
 }
