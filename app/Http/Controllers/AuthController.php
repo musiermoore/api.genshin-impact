@@ -6,9 +6,17 @@ use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function user(Request $request)
+    {
+        $user = $request->user();
+
+        return $this->successResponse(['user' => $user]);
+    }
+
     public function login(AuthLoginRequest $request)
     {
         $data = $request->validated();
@@ -18,7 +26,8 @@ class AuthController extends Controller
             $token =  $user->createToken('auth-token')->plainTextToken;
 
             $data = [
-                'token' => $token
+                'token' => $token,
+                'user'  => $user
             ];
 
             return $this->successResponse($data, 'User logged-in!');
