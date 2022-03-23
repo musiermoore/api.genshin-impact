@@ -23,5 +23,10 @@ Route::prefix('/auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/accounts', \App\Http\Controllers\AccountController::class);
     Route::post('/accounts/{id}/restore', [\App\Http\Controllers\AccountController::class, 'restore']);
+
+    Route::prefix('/admin')->group(function () {
+        Route::resource('/characters', \App\Http\Controllers\Admin\CharacterController::class)
+            ->except('edit');
+    });
 });
 
