@@ -22,7 +22,8 @@ class RunBasicSeeds extends Seeder
             SkillTypeSeed::class,
             StarSeed::class,
             WeaponTypeSeed::class,
-            ArtifactTypeSeed::class
+            ArtifactTypeSeed::class,
+            ImageTypeSeeder::class
         ]);
     }
 }
