@@ -33,7 +33,7 @@ class AuthController extends Controller
             return $this->successResponse($data, 'User logged-in!');
         }
 
-        return $this->errorResponse(401, 'Unauthorised');
+        return $this->errorResponse(401, 'Неверный логин или пароль.');
     }
 
     public function register(AuthRegisterRequest $request)
