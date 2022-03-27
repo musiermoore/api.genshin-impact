@@ -121,6 +121,14 @@ class CharacterController extends Controller
             return $this->errorResponse(400, 'Bad request.');
         }
 
+        $character = Character::query()
+            ->where('id', $id)
+            ->first();
+
+        if (empty($character)) {
+            return $this->errorResponse(404, 'Персонаж не найден.');
+        }
+
         $saveData = [
             'star_id'        => $request->star_id,
             'name'           => $request->name,
@@ -134,20 +142,20 @@ class CharacterController extends Controller
             : Str::slug($saveData['name']);
 
         if (!empty($request->image)) {
-            $existingImage = Image::query()
+            $existingImage = $character->image()
                 ->where('imageable_id', $id)
-                ->where('imageable_type','App\Models\Character')
                 ->first();
 
             if (!empty($existingImage)) {
                 Storage::delete($existingImage['path']);
             }
 
-            Image::query()->updateOrCreate([
-                'imageable_id'   => $id,
-                'imageable_type' => 'App\Models\Character'
+            $path = $this->uploadImage($request->image, $saveData['slug']);
+
+            $character->image()->updateOrCreate([
+                'imageable_id' => $id
             ],[
-                'path' => $this->uploadImage($request->image, $saveData['slug'])
+                'path' => $path
             ]);
         }
 
