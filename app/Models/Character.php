@@ -14,8 +14,7 @@ class Character extends Model
         'name',
         'slug',
         'element_id',
-        'weapon_type_id',
-        'image_path'
+        'weapon_type_id'
     ];
 
     public function image()
@@ -26,5 +25,20 @@ class Character extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function star()
+    {
+        return $this->belongsTo(Star::class);
+    }
+
+    public function element()
+    {
+        return $this->belongsTo(Element::class);
+    }
+
+    public function weaponType()
+    {
+        return $this->belongsTo(WeaponType::class);
     }
 }
