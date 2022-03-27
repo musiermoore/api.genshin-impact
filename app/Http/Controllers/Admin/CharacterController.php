@@ -166,7 +166,26 @@ class CharacterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (empty($id)) {
+            return $this->errorResponse(400, 'Bad request.');
+        }
+
+        $existingImage = Image::query()
+            ->where('imageable_id', $id)
+            ->where('imageable_type','App\Models\Character')
+            ->first();
+
+        if (!empty($existingImage)) {
+            Storage::delete($existingImage['path']);
+        }
+
+        $existingImage->forceDelete();
+
+        Character::query()
+            ->where('id', $id)
+            ->forceDelete();
+
+        return $this->successResponse(null, 'Персонаж удален.');
     }
 
     public function create()
