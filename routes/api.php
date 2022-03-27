@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::resource('/characters', \App\Http\Controllers\Admin\CharacterController::class)
             ->except('edit');
+        Route::resource('/characteristics', \App\Http\Controllers\Admin\CharacteristicController::class)
+            ->except('edit');
     });
 });
 
