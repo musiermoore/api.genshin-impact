@@ -12,7 +12,7 @@ use App\Models\Image;
 use App\Models\ImageType;
 use App\Models\Star;
 use App\Models\WeaponType;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CharacterController extends Controller
@@ -85,12 +85,24 @@ class CharacterController extends Controller
      */
     public function show($id)
     {
+        $stars = Star::all();
+        $weaponTypes = WeaponType::all();
+        $elements = Element::all();
+
         $character = Character::query()
+            ->with('element', 'star', 'weaponType', 'image')
             ->where('id', $id)
             ->first();
 
+        if (empty($character)) {
+            return $this->errorResponse(404, 'Персонаж не найден.');
+        }
+
         $data = [
-            'character' => $character
+            'character' => $character,
+            'stars' => $stars,
+            'weapon_types' => $weaponTypes,
+            'elements' => $elements
         ];
 
         return $this->successResponse($data);
@@ -109,18 +121,34 @@ class CharacterController extends Controller
             return $this->errorResponse(400, 'Bad request.');
         }
 
-        $image = null;
+        $saveData = [
+            'star_id'        => $request->star_id,
+            'name'           => $request->name,
+            'slug'           => $request->slug ?? null,
+            'element_id'     => $request->element_id,
+            'weapon_type_id' => $request->weapon_type_id
+        ];
+
+        $saveData['slug'] = !empty($saveData['slug'])
+            ? Str::slug($saveData['slug'])
+            : Str::slug($saveData['name']);
 
         if (!empty($request->image)) {
-            $image = Image::query()->create([
-                'path' => $this->uploadImage($request->image)
+            $existingImage = Image::query()
+                ->where('imageable_id', $id)
+                ->where('imageable_type','App\Models\Character')
+                ->first();
+
+            if (!empty($existingImage)) {
+                Storage::delete($existingImage['path']);
+            }
+
+            Image::query()->updateOrCreate([
+                'imageable_id'   => $id,
+                'imageable_type' => 'App\Models\Character'
+            ],[
+                'path' => $this->uploadImage($request->image, $saveData['slug'])
             ]);
-        }
-
-        $saveData = $request->validated();
-
-        if (!empty($image)) {
-            $saveData['image'] = $image;
         }
 
         Character::query()

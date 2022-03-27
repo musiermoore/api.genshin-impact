@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CharacterUpdateRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class CharacterUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->user();
     }
 
     /**
@@ -24,7 +25,13 @@ class CharacterUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'star_id'        => ['required', 'exists:stars,id'],
+            'name'           => ['required', 'string'],
+            'slug'           => ['nullable', 'string', Rule::unique('characters', 'slug')->ignore($this->character)],
+            'element_id'     => ['required', 'exists:elements,id'],
+            'weapon_type_id' => ['required', 'exists:weapon_types,id'],
+//            'image'          => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image_type_id'  => ['nullable', 'exists:image_types,id']
         ];
     }
 }
