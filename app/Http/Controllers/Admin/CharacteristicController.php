@@ -18,7 +18,9 @@ class CharacteristicController extends Controller
      */
     public function index()
     {
-        $characteristics = Characteristic::with('characteristicType')->get();
+        $characteristics = Characteristic::with('characteristicType')
+            ->orderBy('characteristic_type_id')
+            ->get();
 
         $data = [
             'characteristics' => $characteristics
