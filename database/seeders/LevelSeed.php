@@ -16,7 +16,7 @@ class LevelSeed extends Seeder
     {
         $levels = [];
 
-        for ($level = 1; $level <= 60; $level++) {
+        for ($level = 1; $level <= 90; $level++) {
             array_push($levels, ['level' => $level]);
         }
 
