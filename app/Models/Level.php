@@ -14,4 +14,13 @@ class Level extends Model
         'created_at',
         'updated_at'
     ];
+
+    public static function getCharacterLevels()
+    {
+        return Level::query()
+            ->whereIn('level', CharacterLevel::getCharacterLevels())
+            ->get()
+            ->keyBy('level')
+            ->toArray();
+    }
 }
