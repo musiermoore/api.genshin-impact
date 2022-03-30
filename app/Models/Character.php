@@ -41,4 +41,14 @@ class Character extends Model
     {
         return $this->belongsTo(WeaponType::class);
     }
+
+    public function characterLevels()
+    {
+        return $this->hasMany(CharacterLevel::class);
+    }
+
+    public function characteristics()
+    {
+        return $this->hasManyThrough(Characteristic::class, CharacterLevel::class);
+    }
 }
