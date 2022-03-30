@@ -27,6 +27,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::resource('/characters', \App\Http\Controllers\Admin\CharacterController::class)
             ->except('edit');
+        Route::get('/characters/{characterId}/levels/{levelId}/characteristics', [
+            \App\Http\Controllers\Admin\CharacterLevelController::class, 'getCharacterCharacteristics'
+        ]);
+        Route::post('/characters/{characterId}/levels/{levelId}/characteristics', [
+            \App\Http\Controllers\Admin\CharacterLevelController::class, 'addCharacteristicToCharacter'
+        ]);
+
         Route::resource('/characteristics', \App\Http\Controllers\Admin\CharacteristicController::class)
             ->except('edit');
     });
