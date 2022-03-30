@@ -27,7 +27,8 @@ class CharacterController extends Controller
     public function index()
     {
         $characters = Character::query()
-            ->with('images.imageType')
+            ->with('images.imageType', 'element')
+            ->orderBy('name')
             ->get();
 
         $data = [
@@ -90,7 +91,14 @@ class CharacterController extends Controller
         $elements = Element::all();
 
         $character = Character::query()
-            ->with('element', 'star', 'weaponType', 'image')
+            ->with(
+                'element',
+                'star',
+                'weaponType',
+                'image',
+                'characterLevels.level',
+                'characterLevels.ascension'
+            )
             ->where('id', $id)
             ->first();
 
