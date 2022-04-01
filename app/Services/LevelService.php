@@ -46,14 +46,6 @@ class LevelService
                 'ascension_id' => $ascensions[3]['id']
             ],
             [
-                'level_id' => $characterLevels[50]['id'],
-                'ascension_id' => $ascensions[3]['id']
-            ],
-            [
-                'level_id' => $characterLevels[60]['id'],
-                'ascension_id' => $ascensions[3]['id']
-            ],
-            [
                 'level_id' => $characterLevels[60]['id'],
                 'ascension_id' => $ascensions[4]['id']
             ],
