@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Character;
 use App\Services\LevelService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CreateBasicCharacterLevelsCommand extends Command
 {
@@ -39,6 +40,8 @@ class CreateBasicCharacterLevelsCommand extends Command
      */
     public function handle()
     {
+        Log::info('CreateBasicCharacterLevelsCommand: start');
+
         $levelService = new LevelService();
 
         $levelsWithAscensions = $levelService->getCharacterLevelsWithAscensions();
@@ -75,7 +78,7 @@ class CreateBasicCharacterLevelsCommand extends Command
             $character->characterLevels()->createMany($saveData);
         }
 
-
+        Log::info('CreateBasicCharacterLevelsCommand: stop');
         return 0;
     }
 }
