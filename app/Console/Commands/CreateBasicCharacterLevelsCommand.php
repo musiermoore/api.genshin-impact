@@ -46,22 +46,30 @@ class CreateBasicCharacterLevelsCommand extends Command
         $characters = Character::query()
             ->doesntHave('characterLevels')
             ->orWhere(function ($query) {
-                $query->has('characterLevels', '<', 16);
+                $query->has('characterLevels', '<', 14);
             })
             ->with('characterLevels')
             ->get();
 
         foreach ($characters as $character) {
-            $character->characterLevels()->delete();
+            $exitingLevelsWithAscensions = $character->characterLevels()
+                ->get(['level_id', 'ascension_id'])
+                ->toArray();
 
             $saveData = [];
 
             foreach ($levelsWithAscensions as $levelWithAscension) {
-                $saveData[] = [
-                    'character_id' => $character->id,
-                    'level_id'     => $levelWithAscension['level_id'],
-                    'ascension_id' => $levelWithAscension['ascension_id']
-                ];
+                if (
+                    !in_array($levelWithAscension['level_id'], array_column($exitingLevelsWithAscensions, 'level_id')) &&
+                    !in_array($levelWithAscension['ascension_id'], array_column($exitingLevelsWithAscensions, 'ascension_id'))
+                ) {
+                    $saveData[] = [
+                        'character_id' => $character->id,
+                        'level_id'     => $levelWithAscension['level_id'],
+                        'ascension_id' => $levelWithAscension['ascension_id']
+                    ];
+                }
+
             }
 
             $character->characterLevels()->createMany($saveData);
