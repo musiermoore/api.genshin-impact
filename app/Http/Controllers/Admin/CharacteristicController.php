@@ -20,6 +20,7 @@ class CharacteristicController extends Controller
     {
         $characteristics = Characteristic::with('characteristicType')
             ->orderBy('characteristic_type_id')
+            ->orderBy('id')
             ->get();
 
         $data = [
