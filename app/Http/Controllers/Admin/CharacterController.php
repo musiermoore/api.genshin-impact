@@ -66,7 +66,7 @@ class CharacterController extends Controller
                 ->first();
 
             $character->image()->create([
-                'path' => $this->uploadImage($request->file('image'), $saveData['slug']),
+                'path' => $this->uploadImage($request->file('image'), 'characters', $saveData['slug']),
                 'image_type_id' => $imageType['id']
             ]);
         }
@@ -158,7 +158,7 @@ class CharacterController extends Controller
                 Storage::delete($existingImage['path']);
             }
 
-            $path = $this->uploadImage($request->image, $saveData['slug']);
+            $path = $this->uploadImage($request->image, 'characters', $saveData['slug']);
 
             $character->image()->updateOrCreate([
                 'imageable_id' => $id
