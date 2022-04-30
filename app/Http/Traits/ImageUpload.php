@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 trait ImageUpload
 {
-    public function uploadImage($file, $fileName = null): ?string
+    public function uploadImage($file, $folderName = 'default', $fileName = null): ?string
     {
         $imageName = !empty($fileName)
             ? $fileName
@@ -16,7 +16,7 @@ trait ImageUpload
 
         $imageNameWithExt = $imageName . '.' . $ext;
 
-        $savePath = 'images/characters/';
+        $savePath = "images/$folderName/";
 
         $imageUrl = $savePath . $imageNameWithExt;
 
