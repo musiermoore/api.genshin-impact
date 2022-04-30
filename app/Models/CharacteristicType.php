@@ -15,4 +15,9 @@ class CharacteristicType extends Model
         'created_at',
         'updated_at'
     ];
+
+    public const BASIC = 'basic';
+    public const SECONDARY = 'secondary';
+    public const ELEMENTS = 'elements';
+
 }
