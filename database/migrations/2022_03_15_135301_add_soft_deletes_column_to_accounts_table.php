@@ -26,7 +26,7 @@ class AddSoftDeletesColumnToAccountsTable extends Migration
     public function down()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            //
+            $table->dropSoftDeletes();
         });
     }
 }
