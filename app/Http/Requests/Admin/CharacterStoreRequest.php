@@ -29,7 +29,7 @@ class CharacterStoreRequest extends FormRequest
             'slug'           => ['nullable', 'string', 'unique:characters,slug'],
             'element_id'     => ['required', 'exists:elements,id'],
             'weapon_type_id' => ['required', 'exists:weapon_types,id'],
-//            'image'          => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image'          => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'image_type_id'  => ['nullable', 'exists:image_types,id']
         ];
     }
