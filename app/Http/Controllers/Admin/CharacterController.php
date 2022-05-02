@@ -218,4 +218,23 @@ class CharacterController extends Controller
 
         return $this->successResponse($data);
     }
+
+    public function getCalculatorCharacters()
+    {
+        $characters = Character::with([
+            'images.imageType',
+            'element',
+            'star',
+            'weaponType',
+            'characterLevels.characteristics',
+            'characterLevels.level',
+            'characterLevels.ascension'
+        ])->get();
+
+        $data = [
+            'characters' => $characters
+        ];
+
+        return $this->successResponse($data);
+    }
 }
