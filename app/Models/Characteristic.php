@@ -73,7 +73,7 @@ class Characteristic extends Model
             } elseif ($key === 'crit-dmg') {
                 $characteristics['crit-dmg']['pivot']['value'] = 50;
             } elseif ($key === 'energy-recharge') {
-                $characteristics['energy-recharge']['pivot']['value'] = 50;
+                $characteristics['energy-recharge']['pivot']['value'] = 100;
             } else {
                 $characteristic['pivot']['value'] = 0;
             }
