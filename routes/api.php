@@ -20,15 +20,9 @@ Route::prefix('/auth')->group(function () {
     Route::get('/user', [\App\Http\Controllers\AuthController::class, 'user'])->middleware('auth:sanctum');;
 });
 
-
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/accounts', \App\Http\Controllers\AccountController::class);
     Route::post('/accounts/{id}/restore', [\App\Http\Controllers\AccountController::class, 'restore']);
-
-    Route::get('/characters/calculator', [
-        \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacters'
-    ]);
 
     Route::prefix('/admin')->group(function () {
         Route::resource('/characters', \App\Http\Controllers\Admin\CharacterController::class)
@@ -47,4 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
             ->except('edit');
     });
 });
+
+Route::get('/characters/calculator', [
+    \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacters'
+]);
 
