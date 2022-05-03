@@ -22,15 +22,17 @@ class CharacterController extends Controller
             ->get()
             ->toArray();
 
-        foreach ($characters as $characterKey => $character) {
-            foreach ($character['character_levels'] as $characterLevelKey => $characterLevel) {
-                $characters[$characterKey]['character_levels'][$characterLevelKey]['characteristics'] =
-                    Characteristic::calculateCharacterCharacteristics($characterLevel['characteristics']);
-            }
-        }
-
         $data = [
             'characters' => $characters
+        ];
+
+        return $this->successResponse($data);
+    }
+
+    public function getCalculatorCharacteristics()
+    {
+        $data = [
+            'characteristics' => Characteristic::getDefaultCharacteristics()
         ];
 
         return $this->successResponse($data);
