@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\CharacterStoreRequest;
 use App\Http\Requests\Admin\CharacterUpdateRequest;
 use App\Http\Traits\ImageUpload;
 use App\Models\Character;
+use App\Models\Characteristic;
 use App\Models\Element;
 use App\Models\Image;
 use App\Models\ImageType;
@@ -229,7 +230,16 @@ class CharacterController extends Controller
             'characterLevels.characteristics',
             'characterLevels.level',
             'characterLevels.ascension'
-        ])->get();
+        ])->orderBy('name')
+            ->get()
+            ->toArray();
+
+        foreach ($characters as $characterKey => $character) {
+            foreach ($character['character_levels'] as $characterLevelKey => $characterLevel) {
+                $characters[$characterKey]['character_levels'][$characterLevelKey]['characteristics'] =
+                    Characteristic::calculateCharacterCharacteristics($characterLevel['characteristics']);
+            }
+        }
 
         $data = [
             'characters' => $characters

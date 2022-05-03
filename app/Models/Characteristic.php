@@ -57,4 +57,50 @@ class Characteristic extends Model
             ->orderBy('characteristics.slug')
             ->get();
     }
+
+    public static function getDefaultCharacteristics()
+    {
+        $unusedCharacteristics = ['hp-percent', 'atk-percent', 'def-percent', 'max-stamina'];
+        $characteristics = Characteristic::query()
+            ->whereNotIn('slug', $unusedCharacteristics)
+            ->get()
+            ->keyBy('slug')
+            ->toArray();
+
+        foreach ($characteristics as $key => &$characteristic) {
+            if ($key === 'crit-rate') {
+                $characteristics['crit-rate']['pivot']['value'] = 5;
+            } elseif ($key === 'crit-dmg') {
+                $characteristics['crit-dmg']['pivot']['value'] = 50;
+            } elseif ($key === 'energy-recharge') {
+                $characteristics['energy-recharge']['pivot']['value'] = 50;
+            } else {
+                $characteristic['pivot']['value'] = 0;
+            }
+        }
+
+        return $characteristics;
+    }
+
+    public static function calculateCharacterCharacteristics($characteristics)
+    {
+        $calculatedCharacteristics = self::getDefaultCharacteristics();
+
+        foreach ($characteristics as $characteristic) {
+            if ($characteristic['slug'] === 'hp-percent') {
+                $calculatedCharacteristics['hp']['pivot']['value'] +=
+                    floor($calculatedCharacteristics['hp']['pivot']['value'] * $characteristic['pivot']['value'] / 100);
+            } elseif ($characteristic['slug'] === 'atk-percent') {
+                $calculatedCharacteristics['atk']['pivot']['value'] +=
+                    floor($calculatedCharacteristics['atk']['pivot']['value'] * $characteristic['pivot']['value'] / 100);
+            } elseif ($characteristic['slug'] === 'def-percent') {
+                $calculatedCharacteristics['def']['pivot']['value'] +=
+                    floor($calculatedCharacteristics['def']['pivot']['value'] * $characteristic['pivot']['value'] / 100);
+            } else {
+                $calculatedCharacteristics[$characteristic['slug']]['pivot']['value'] = $characteristic['pivot']['value'];
+            }
+        }
+
+        return $calculatedCharacteristics;
+    }
 }
