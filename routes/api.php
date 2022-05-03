@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/accounts/{id}/restore', [\App\Http\Controllers\AccountController::class, 'restore']);
 
     Route::get('/characters/calculator', [
-        \App\Http\Controllers\Admin\CharacterController::class, 'getCalculatorCharacters'
+        \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacters'
     ]);
 
     Route::prefix('/admin')->group(function () {
