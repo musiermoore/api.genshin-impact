@@ -46,3 +46,6 @@ Route::get('/characters/calculator', [
     \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacters'
 ]);
 
+Route::get('/characters/calculator/characteristics', [
+    \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacteristics'
+]);
