@@ -118,6 +118,7 @@ class CharacterController extends Controller
 
         foreach ($groupedCharacters as &$character) {
             $character['character_levels'] = array_values($character['character_levels']);
+            $character['images'] = array_values($character['images']);
         }
 
         $data = [
