@@ -72,7 +72,7 @@ class CharacterController extends Controller
             $groupedCharacters[$characterId]['slug'] = $character['character_slug'];
 
             // images
-            $groupedCharacters[$characterId]['images'][['image_slug']] = [
+            $groupedCharacters[$characterId]['images'][$character['image_slug']] = [
                 'path' => $character['image_path'],
                 'image_type' => [
                     'type' => $character['image_type'],
