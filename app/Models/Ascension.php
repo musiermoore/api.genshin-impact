@@ -29,8 +29,11 @@ class Ascension extends Model
 
     public function getMaxLevelAttribute()
     {
-        $ascension = $this->ascension;
+        return Ascension::getMaxLevel($this->ascension);
+    }
 
+    public static function getMaxLevel($ascension)
+    {
         $maxLevel = 0;
 
         if ($ascension === 0) {
