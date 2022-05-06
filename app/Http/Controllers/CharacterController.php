@@ -66,45 +66,50 @@ class CharacterController extends Controller
 
             $characterId = $character['character_id'];
 
-            // character
-            $groupedCharacters[$characterId]['id'] = $characterId;
-            $groupedCharacters[$characterId]['name'] = $character['character_name'];
-            $groupedCharacters[$characterId]['slug'] = $character['character_slug'];
+            if (empty($groupedCharacters[$characterId]['id'])) {
+                // character
+                $groupedCharacters[$characterId]['id'] = $characterId;
+                $groupedCharacters[$characterId]['name'] = $character['character_name'];
+                $groupedCharacters[$characterId]['slug'] = $character['character_slug'];
 
-            // images
-            $groupedCharacters[$characterId]['images'][$character['image_slug']] = [
-                'path' => $character['image_path'],
-                'image_type' => [
-                    'type' => $character['image_type'],
-                    'slug' => $character['image_slug']
-                ]
-            ];
+                // images
+                $groupedCharacters[$characterId]['images'][$character['image_slug']] = [
+                    'path' => $character['image_path'],
+                    'image_type' => [
+                        'type' => $character['image_type'],
+                        'slug' => $character['image_slug']
+                    ]
+                ];
 
-            // elements
-            $groupedCharacters[$characterId]['element'] = [
-                'element' => $character['element'],
-                'slug' => $character['element_slug']
-            ];
+                // elements
+                $groupedCharacters[$characterId]['element'] = [
+                    'element' => $character['element'],
+                    'slug' => $character['element_slug']
+                ];
 
-            // stars
-            $groupedCharacters[$characterId]['star']['star'] = $character['star'];
+                // stars
+                $groupedCharacters[$characterId]['star']['star'] = $character['star'];
 
-            // weapon types
-            $groupedCharacters[$characterId]['weapon_type'] = [
-                'type' => $character['weapon_type'],
-                'slug' => $character['weapon_type_slug']
-            ];
+                // weapon types
+                $groupedCharacters[$characterId]['weapon_type'] = [
+                    'type' => $character['weapon_type'],
+                    'slug' => $character['weapon_type_slug']
+                ];
+            }
 
             // character level
             $characterLevelId = $character['character_level_id'];
 
-            $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['ascension'] = [
-                'ascension' => $character['ascension'],
-                'max_level' => Ascension::getMaxLevel($character['ascension'])
-            ];
-            $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['level'] = [
-                'level' => $character['level']
-            ];
+            if (empty($groupedCharacters[$characterId]['character_levels'][$characterLevelId]['ascension'])) {
+                $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['ascension'] = [
+                    'ascension' => $character['ascension'],
+                    'max_level' => Ascension::getMaxLevel($character['ascension'])
+                ];
+                $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['level'] = [
+                    'level' => $character['level']
+                ];
+            }
+
             $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['characteristics'][] = [
                 'characteristic_id' => $character['characteristic_id'],
                 'name' => $character['characteristic_name'],
