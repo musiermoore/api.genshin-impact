@@ -184,8 +184,13 @@ class WeaponController extends Controller
 
             $path = $this->uploadImage($request->image, 'weapons', $saveData['slug']);
 
+            $imageType = ImageType::query()
+                ->where('slug', ImageType::MAIN)
+                ->first();
+
             $weapon->image()->updateOrCreate([
-                'imageable_id' => $id
+                'imageable_id' => $id,
+                'imageabe_type_id' => $imageType['id']
             ],[
                 'path' => $path
             ]);
