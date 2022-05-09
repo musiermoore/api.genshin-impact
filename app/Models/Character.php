@@ -57,6 +57,16 @@ class Character extends Model
     {
         $limit = 10;
 
+        $characterIds = [];
+        if (!empty($page)) {
+            $characterIds = Character::query()
+                ->limit($limit)
+                ->offset($limit * $page)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+        }
+
         return DB::table('characters')
             ->select([
                 DB::raw(
@@ -103,9 +113,8 @@ class Character extends Model
             ->leftJoin('elements', 'characters.element_id', '=', 'elements.id')
             ->leftJoin('stars', 'characters.star_id', '=', 'stars.id')
             ->leftJoin('weapon_types', 'characters.weapon_type_id', '=', 'weapon_types.id')
-            ->orderBy('characters.name')
-            ->when(!empty($page), function ($query) use ($limit, $page) {
-                $query->take($limit)->skip($limit * $page);
+            ->when(!empty($page), function ($query) use ($characterIds) {
+                $query->whereIn('characters.id', $characterIds);
             })
             ->get()
             ->toArray();
