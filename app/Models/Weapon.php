@@ -42,4 +42,9 @@ class Weapon extends Model
     {
         return $this->belongsTo(WeaponType::class);
     }
+
+    public function characteristics()
+    {
+        return $this->hasMany(WeaponCharacteristic::class);
+    }
 }
