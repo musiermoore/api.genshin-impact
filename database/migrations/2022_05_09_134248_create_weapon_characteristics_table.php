@@ -14,6 +14,8 @@ class CreateWeaponCharacteristicsTable extends Migration
     public function up()
     {
         Schema::create('weapon_characteristics', function (Blueprint $table) {
+            $table->id();
+
             $table->foreignId('weapon_id');
             $table->foreignId('level_id');
             $table->foreignId('ascension_id');
