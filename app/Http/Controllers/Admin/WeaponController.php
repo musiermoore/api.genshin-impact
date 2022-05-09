@@ -190,7 +190,7 @@ class WeaponController extends Controller
 
             $weapon->image()->updateOrCreate([
                 'imageable_id' => $id,
-                'imageabe_type_id' => $imageType['id']
+                'image_type_id' => $imageType['id']
             ],[
                 'path' => $path
             ]);
