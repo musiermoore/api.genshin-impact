@@ -18,4 +18,14 @@ class WeaponCharacteristic extends Model
         'base_atk',
         'sub_stat',
     ];
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
+
+    public function ascension()
+    {
+        return $this->belongsTo(Ascension::class);
+    }
 }
