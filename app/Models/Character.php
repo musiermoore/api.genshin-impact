@@ -62,6 +62,7 @@ class Character extends Model
             $characterIds = Character::query()
                 ->limit($limit)
                 ->offset($limit * $page)
+                ->orderBy('name')
                 ->get()
                 ->pluck('id')
                 ->toArray();
@@ -116,6 +117,9 @@ class Character extends Model
             ->when(!empty($page), function ($query) use ($characterIds) {
                 $query->whereIn('characters.id', $characterIds);
             })
+            ->orderBy('characters.name')
+            ->orderBy('ascensions.ascension')
+            ->orderBy('levels.level')
             ->get()
             ->toArray();
     }
