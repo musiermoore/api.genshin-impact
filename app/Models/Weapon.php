@@ -47,4 +47,19 @@ class Weapon extends Model
     {
         return $this->hasMany(WeaponCharacteristic::class);
     }
+
+    public static function getWeaponLevels()
+    {
+        $levels = [
+            1, 20, 40, 50, 60, 70, 80, 90
+        ];
+
+        return Level::query()
+            ->select(['id', 'level'])
+            ->whereIn('level', $levels)
+            ->get()
+            ->keyBy('level')
+            ->toArray();
+
+    }
 }
