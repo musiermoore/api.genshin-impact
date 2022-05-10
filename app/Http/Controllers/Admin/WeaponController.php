@@ -5,16 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\WeaponStoreRequest;
 use App\Http\Requests\Admin\WeaponUpdateRequest;
+use App\Http\Requests\WeaponCharacteristicsSaveRequest;
 use App\Http\Traits\ImageUpload;
-use App\Models\Character;
 use App\Models\Characteristic;
-use App\Models\Element;
 use App\Models\Image;
 use App\Models\ImageType;
 use App\Models\Star;
 use App\Models\Weapon;
 use App\Models\WeaponType;
-use Illuminate\Http\Request;
+use App\Services\LevelService;
 use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -111,13 +110,17 @@ class WeaponController extends Controller
     {
         $stars = Star::all();
         $weaponTypes = WeaponType::all();
+        $weaponLevels = (new LevelService())->getWeaponLevelsWithAscensions();
         $mainCharacteristics = Characteristic::getWeaponCharacteristics();
 
         $weapon = Weapon::query()
-            ->with(
+            ->with([
                 'weaponType',
-                'image'
-            )
+                'image',
+                'characteristics.level',
+                'characteristics.ascension',
+                'mainCharacteristic'
+            ])
             ->where('id', $id)
             ->first();
 
@@ -129,21 +132,11 @@ class WeaponController extends Controller
             'weapon' => $weapon,
             'stars' => $stars,
             'weapon_types' => $weaponTypes,
-            'main_characteristics' => $mainCharacteristics
+            'main_characteristics' => $mainCharacteristics,
+            'levels' => $weaponLevels
         ];
 
         return $this->successResponse($data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -231,5 +224,33 @@ class WeaponController extends Controller
             ->forceDelete();
 
         return $this->successResponse(null, 'Оружие удалено.');
+    }
+
+    public function saveWeaponCharacteristics(WeaponCharacteristicsSaveRequest $request, $id)
+    {
+        $weapon = Weapon::query()
+            ->where('id', $id)
+            ->first();
+
+        if (empty($weapon)) {
+            return $this->errorResponse(404, 'Оружие не найдено.');
+        }
+
+        $data = $request->validated();
+
+
+        $characteristic = $weapon->characteristics()
+            ->updateOrCreate(
+                [
+                    'weapon_id' => $id,
+                    'level_id' => $data['level_id'],
+                    'ascension_id' => $data['ascension_id'],
+                ],
+                $data
+            );
+
+        return $characteristic
+            ? $this->successResponse(['id' => $id], 'Характеристики оружия сохранены.')
+            : $this->errorResponse('401', 'Ошибка сохранения');
     }
 }
