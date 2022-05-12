@@ -35,7 +35,7 @@ class Weapon extends Model
 
     public function mainCharacteristic()
     {
-        return $this->belongsTo(Characteristic::class);
+        return $this->belongsTo(Characteristic::class)->withTrashed();
     }
 
     public function weaponType()
