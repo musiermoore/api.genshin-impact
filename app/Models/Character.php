@@ -53,7 +53,7 @@ class Character extends Model
         return $this->hasManyThrough(Characteristic::class, CharacterLevel::class);
     }
 
-    public static function getCalculatorCharacters($page = 0)
+    public static function getCalculatorCharacters($page = 0): array
     {
         $limit = 10;
 
@@ -124,7 +124,7 @@ class Character extends Model
             ->toArray();
     }
 
-    public static function compactCharacterDataForCalculator($characters)
+    public static function compactCharacterDataForCalculator($characters): array
     {
         $groupedCharacters = [];
         foreach ($characters as $character) {
@@ -181,9 +181,7 @@ class Character extends Model
                 'name' => $character['characteristic_name'],
                 'slug' => $character['characteristic_slug'],
                 'in_percent' => $character['in_percent'],
-                'pivot' => [
-                    'value' => $character['characteristic_value']
-                ]
+                'value' => $character['characteristic_value']
             ];
         }
 
@@ -192,6 +190,6 @@ class Character extends Model
             $character['images'] = array_values($character['images']);
         }
 
-        return $groupedCharacters;
+        return array_values($groupedCharacters);
     }
 }

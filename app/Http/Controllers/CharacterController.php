@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CalculatorRequest;
+use App\Http\Resources\CalculatorCharactersResource;
 use App\Models\Character;
 use App\Models\Characteristic;
 
@@ -16,7 +17,7 @@ class CharacterController extends Controller
         $groupedCharacters = Character::compactCharacterDataForCalculator($characters);
 
         $data = [
-            'characters' => array_values($groupedCharacters)
+            'characters' => $groupedCharacters
         ];
 
         return $this->successResponse($data);
