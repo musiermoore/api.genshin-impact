@@ -68,15 +68,17 @@ class Characteristic extends Model
             ->toArray();
 
         foreach ($characteristics as $key => &$characteristic) {
+            $value = 0;
+
             if ($key === 'crit-rate') {
-                $characteristics['crit-rate']['pivot']['value'] = 5;
+                $value = 5;
             } elseif ($key === 'crit-dmg') {
-                $characteristics['crit-dmg']['pivot']['value'] = 50;
+                $value = 50;
             } elseif ($key === 'energy-recharge') {
-                $characteristics['energy-recharge']['pivot']['value'] = 100;
-            } else {
-                $characteristic['pivot']['value'] = 0;
+                $value = 100;
             }
+
+            $characteristic['value'] = $value;
         }
 
         return $characteristics;
