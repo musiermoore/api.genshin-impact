@@ -107,9 +107,6 @@ class Character extends Model
             ->leftJoin('characteristics',
                 'character_characteristics.characteristic_id', '=', 'characteristics.id'
             )
-            ->leftJoin('characteristic_types',
-                'characteristics.characteristic_type_id', '=', 'characteristic_types.id'
-            )
             ->leftJoin('ascensions', 'character_levels.ascension_id', '=', 'ascensions.id')
             ->leftJoin('elements', 'characters.element_id', '=', 'elements.id')
             ->leftJoin('stars', 'characters.star_id', '=', 'stars.id')
