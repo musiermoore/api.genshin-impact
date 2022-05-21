@@ -52,3 +52,6 @@ Route::get('/characters/calculator', [
 Route::get('/characters/calculator/characteristics', [
     \App\Http\Controllers\CharacterController::class, 'getCalculatorCharacteristics'
 ]);
+Route::get('/weapons/calculator', [
+    \App\Http\Controllers\WeaponController::class, 'getCalculatorWeapons'
+]);
