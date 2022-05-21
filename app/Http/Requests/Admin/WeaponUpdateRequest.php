@@ -32,7 +32,7 @@ class WeaponUpdateRequest extends FormRequest
                 'string',
                 Rule::unique('weapons', 'slug')->ignore($this->weapon)
             ],
-            'main_characteristic_id' => ['required', 'exists:characteristics,id'],
+            'sub_stat_id'            => ['required', 'exists:characteristics,id'],
             'weapon_type_id'         => ['required', 'exists:weapon_types,id'],
             'image'                  => ['sometimes', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'image_type_id'          => ['nullable', 'exists:image_types,id'],

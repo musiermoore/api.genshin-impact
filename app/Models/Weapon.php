@@ -33,7 +33,7 @@ class Weapon extends Model
         return $this->belongsTo(Star::class);
     }
 
-    public function mainCharacteristic()
+    public function subStat()
     {
         return $this->belongsTo(Characteristic::class)->withTrashed();
     }

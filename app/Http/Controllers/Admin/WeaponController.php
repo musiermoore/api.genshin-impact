@@ -49,12 +49,12 @@ class WeaponController extends Controller
     {
         $stars = Star::all();
         $weaponTypes = WeaponType::all();
-        $mainCharacteristics = Characteristic::getWeaponCharacteristics();
+        $subStats = Characteristic::getWeaponCharacteristics();
 
         $data = [
             'stars' => $stars,
             'weapon_types' => $weaponTypes,
-            'main_characteristics' => $mainCharacteristics
+            'sub_stats' => $subStats
         ];
 
         return $this->successResponse($data);
@@ -111,7 +111,7 @@ class WeaponController extends Controller
         $stars = Star::all();
         $weaponTypes = WeaponType::all();
         $weaponLevels = (new LevelService())->getWeaponLevelsWithAscensions();
-        $mainCharacteristics = Characteristic::getWeaponCharacteristics();
+        $subStats = Characteristic::getWeaponCharacteristics();
 
         $weapon = Weapon::query()
             ->with([
@@ -119,7 +119,7 @@ class WeaponController extends Controller
                 'image',
                 'characteristics.level',
                 'characteristics.ascension',
-                'mainCharacteristic'
+                'subStat'
             ])
             ->where('id', $id)
             ->first();
@@ -129,11 +129,11 @@ class WeaponController extends Controller
         }
 
         $data = [
-            'weapon' => $weapon,
-            'stars' => $stars,
+            'weapon'       => $weapon,
+            'stars'        => $stars,
             'weapon_types' => $weaponTypes,
-            'main_characteristics' => $mainCharacteristics,
-            'levels' => $weaponLevels
+            'sub_stats'    => $subStats,
+            'levels'       => $weaponLevels
         ];
 
         return $this->successResponse($data);
