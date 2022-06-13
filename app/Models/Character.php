@@ -53,140 +53,90 @@ class Character extends Model
         return $this->hasManyThrough(Characteristic::class, CharacterLevel::class);
     }
 
+    public function getNameAttribute()
+    {
+        return __('characters/characters.' . $this->attributes['slug']);
+    }
+
     public static function getCalculatorCharacters($page = 0): array
     {
-        $limit = 10;
+        $limit = 15;
 
-        $characterIds = [];
-        if (!empty($page)) {
-            $characterIds = Character::query()
-                ->limit($limit)
-                ->offset($limit * $page)
-                ->orderBy('name')
-                ->get()
-                ->pluck('id')
-                ->toArray();
-        }
-
-        return DB::table('characters')
+        return Character::query()
             ->select([
-                DB::raw(
-                    'characters.id AS character_id, characters.name AS character_name, characters.slug AS character_slug'
-                ),
-                DB::raw(
-                    'stars.star, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'
-                ),
-                DB::raw(
-                    'elements.element, elements.slug AS element_slug'
-                ),
-                DB::raw(
-                    'character_levels.id AS character_level_id, levels.level, ascensions.ascension'
-                ),
-                DB::raw(
-                    'character_characteristics.characteristic_id, ' .
-                    'character_characteristics.value AS characteristic_value'
-                ),
-                DB::raw(
-                    'images.path AS image_path, image_types.type AS image_type, image_types.slug AS image_slug'
-                ),
-                DB::raw(
-                    'characteristics.name as characteristic_name, characteristics.slug as characteristic_slug, ' .
-                    'characteristics.in_percent'
-                )
+                DB::raw('characters.id, characters.name, characters.slug'),
+                DB::raw('stars.star, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'),
+                DB::raw('elements.element, elements.slug AS element_slug'),
+                DB::raw('images.path AS image_path, image_types.type AS image_type, image_types.slug AS image_slug')
             ])
+            ->leftJoin('elements', 'elements.id', '=', 'characters.element_id')
+            ->leftJoin('weapon_types', 'weapon_types.id', '=', 'characters.weapon_type_id')
+            ->leftJoin('stars', 'stars.id', '=', 'characters.star_id')
             ->leftJoin('images', function ($join) {
                 $join->on('images.imageable_id', '=', 'characters.id');
-                $join->where('images.imageable_type', '=', 'App\Models\Character');
+                $join->where('images.imageable_type', '=', Character::class);
             })
             ->leftJoin('image_types', 'images.image_type_id', '=', 'image_types.id')
-            ->leftJoin('character_levels', 'characters.id', '=', 'character_levels.character_id')
-            ->leftJoin('character_characteristics',
-                'character_levels.id', '=', 'character_characteristics.character_level_id'
-            )
-            ->leftJoin('levels', 'character_levels.level_id', '=', 'levels.id')
-            ->leftJoin('characteristics',
-                'character_characteristics.characteristic_id', '=', 'characteristics.id'
-            )
-            ->leftJoin('ascensions', 'character_levels.ascension_id', '=', 'ascensions.id')
-            ->leftJoin('elements', 'characters.element_id', '=', 'elements.id')
-            ->leftJoin('stars', 'characters.star_id', '=', 'stars.id')
-            ->leftJoin('weapon_types', 'characters.weapon_type_id', '=', 'weapon_types.id')
-            ->when(!empty($page), function ($query) use ($characterIds) {
-                $query->whereIn('characters.id', $characterIds);
-            })
+            ->with([
+                'characterLevels' => function ($with) {
+                    $with->select([
+                        'character_levels.id', 'character_levels.character_id',
+                        'levels.level', 'ascensions.ascension', 'ascensions.max_level'
+                    ]);
+                    $with->leftJoin('ascensions', 'ascensions.id', '=', 'character_levels.ascension_id');
+                    $with->leftJoin('levels', 'levels.id', '=', 'character_levels.level_id');
+                    $with->orderBy('ascensions.ascension')->orderBy('levels.level');
+                },
+                'characterLevels.characteristics' => function ($with) {
+                    $with->select([
+                        DB::raw('stats.id AS characteristic_id'), 'stats.name', 'stats.slug', 'stats.in_percent',
+                        'character_characteristics.value'
+                    ]);
+                    $with->leftJoin(DB::raw('characteristics AS stats'),
+                        'character_characteristics.characteristic_id', '=', 'stats.id'
+                    );
+                }
+            ])
             ->orderBy('characters.name')
-            ->orderBy('ascensions.ascension')
-            ->orderBy('levels.level')
+            ->when(!empty($page), function ($when) use ($page, $limit) {
+                $when->limit($page * $limit);
+                $when->offset(($page - 1) * $limit);
+            })
             ->get()
             ->toArray();
     }
 
     public static function compactCharacterDataForCalculator($characters): array
     {
-        $groupedCharacters = [];
-        foreach ($characters as $character) {
-            $character = (array) $character;
-
-            $characterId = $character['character_id'];
-
-            if (empty($groupedCharacters[$characterId]['id'])) {
-                // character
-                $groupedCharacters[$characterId]['id'] = $characterId;
-                $groupedCharacters[$characterId]['name'] = $character['character_name'];
-                $groupedCharacters[$characterId]['slug'] = $character['character_slug'];
-
-                // images
-                $groupedCharacters[$characterId]['images'][$character['image_slug']] = [
-                    'path' => $character['image_path'],
-                    'image_type' => [
-                        'type' => $character['image_type'],
-                        'slug' => $character['image_slug']
-                    ]
-                ];
-
-                // elements
-                $groupedCharacters[$characterId]['element'] = [
-                    'element' => $character['element'],
-                    'slug' => $character['element_slug']
-                ];
-
-                // stars
-                $groupedCharacters[$characterId]['star']['star'] = $character['star'];
-
-                // weapon types
-                $groupedCharacters[$characterId]['weapon_type'] = [
-                    'type' => $character['weapon_type'],
-                    'slug' => $character['weapon_type_slug']
-                ];
-            }
-
-            // character level
-            $characterLevelId = $character['character_level_id'];
-
-            if (empty($groupedCharacters[$characterId]['character_levels'][$characterLevelId]['ascension'])) {
-                $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['ascension'] = [
-                    'ascension' => $character['ascension'],
-                    'max_level' => Ascension::getMaxLevel($character['ascension'])
-                ];
-                $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['level'] = [
-                    'level' => $character['level']
-                ];
-            }
-
-            $groupedCharacters[$characterId]['character_levels'][$characterLevelId]['characteristics'][] = [
-                'characteristic_id' => $character['characteristic_id'],
-                'name' => $character['characteristic_name'],
-                'slug' => $character['characteristic_slug'],
-                'in_percent' => $character['in_percent'],
-                'value' => $character['characteristic_value']
+        return array_map(function ($character) {
+            $character['element'] = [
+                'element' => $character['element'],
+                'slug' => $character['element_slug']
             ];
-        }
 
-        foreach ($groupedCharacters as &$character) {
-            $character['character_levels'] = array_values($character['character_levels']);
-            $character['images'] = array_values($character['images']);
-        }
+            $character['weapon_type'] = [
+                'type' => $character['weapon_type'],
+                'slug' => $character['weapon_type_slug']
+            ];
 
-        return array_values($groupedCharacters);
+            $character['images'][] = [
+                'path' => $character['image_path'],
+                'image_type' => [
+                    'type' => $character['image_type'],
+                    'slug' => $character['image_slug']
+                ]
+            ];
+
+
+            unset(
+                $character['image_path'],
+                $character['image_slug'],
+                $character['image_type'],
+                $character['element_slug'],
+                $character['weapon_type_slug']
+            );
+
+            return $character;
+        }, $characters);
     }
 }

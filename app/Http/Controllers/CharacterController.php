@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CalculatorRequest;
-use App\Http\Resources\CalculatorCharactersResource;
 use App\Models\Character;
 use App\Models\Characteristic;
 
