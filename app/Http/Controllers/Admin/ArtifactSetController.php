@@ -23,12 +23,12 @@ class ArtifactSetController extends Controller
 
     public function show($id)
     {
-        $artifactSets = ArtifactSet::with('images')
+        $artifactSet = ArtifactSet::with('images')
             ->where('id', '=', $id)
             ->first();
 
         $data = [
-            'artifact_sets' => $artifactSets
+            'artifact_set' => $artifactSet
         ];
 
         return $this->successResponse($data);
