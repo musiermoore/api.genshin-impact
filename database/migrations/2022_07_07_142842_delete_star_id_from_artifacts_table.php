@@ -27,8 +27,8 @@ class DeleteStarIdFromArtifactsTable extends Migration
     public function down()
     {
         Schema::table('artifacts', function (Blueprint $table) {
-            $table->foreignId('star_id');
-            $table->foreign('artifact_set_id')->references('id')->on('artifact_sets');
+            $table->foreignId('star_id')->after('artifact_set_id');
+            $table->foreign('star_id')->references('id')->on('stars');
         });
     }
 }
