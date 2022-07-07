@@ -26,7 +26,7 @@ class AddSlugColumnToElementsTable extends Migration
     public function down()
     {
         Schema::table('elements', function (Blueprint $table) {
-            //
+            $table->dropColumn('slug');
         });
     }
 }
