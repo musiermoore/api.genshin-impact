@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ArtifactSet extends Model
 {
@@ -13,6 +14,19 @@ class ArtifactSet extends Model
         'name',
         'slug'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (&$model) {
+            if (empty($model['slug'])) {
+                $model['slug'] = $model['name'];
+            }
+
+            $model['slug'] = Str::slug($model['slug']);
+        });
+    }
 
     public function image()
     {
