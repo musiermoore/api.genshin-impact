@@ -36,6 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::resource('/characteristics', \App\Http\Controllers\Admin\CharacteristicController::class)
             ->except('edit');
+        Route::resource('/artifact-sets', \App\Http\Controllers\Admin\ArtifactSetController::class)
+            ->except('edit');
+        Route::resource('/artifacts', \App\Http\Controllers\Admin\ArtifactController::class)
+            ->except('edit');
 
         Route::resource('/weapons', \App\Http\Controllers\Admin\WeaponController::class)
             ->except('edit');
