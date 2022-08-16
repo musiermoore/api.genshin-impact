@@ -37,4 +37,9 @@ class ArtifactSet extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    public function artifacts()
+    {
+        return $this->hasMany(Artifact::class);
+    }
 }
