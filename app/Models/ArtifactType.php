@@ -13,4 +13,11 @@ class ArtifactType extends Model
         'type',
         'slug'
     ];
+
+    public static function getArtifactTypeIdBySlug($slug)
+    {
+        return self::query()
+            ->where('slug', '=', $slug)
+            ->value('id');
+    }
 }
