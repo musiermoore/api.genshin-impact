@@ -237,4 +237,16 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Configs for parsed data
+    |--------------------------------------------------------------------------
+    |
+    | Files with data (characters, weapons, artifacts) will be stored
+    | in the PATH_TO_PARSED_FILES. To get a path to a file need to concat vars:
+    | the env variable and /exports/json (/var/www + /exports/json).
+    |
+    */
+
+    'path_to_parsed_data' => env('PATH_TO_PARSED_FILES', '')
 ];
