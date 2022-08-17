@@ -30,7 +30,7 @@ class Character extends Model
 
     public function star()
     {
-        return $this->belongsTo(Star::class);
+        return $this->belongsTo(Rarity::class);
     }
 
     public function element()

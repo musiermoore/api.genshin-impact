@@ -25,7 +25,7 @@ class WeaponUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'star_id'                => ['required', 'exists:stars,id'],
+            'rarity_id'              => ['required', 'exists:rarities,id'],
             'name'                   => ['required', 'string'],
             'slug'                   => [
                 'nullable',

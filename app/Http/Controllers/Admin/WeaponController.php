@@ -10,7 +10,7 @@ use App\Http\Traits\ImageUpload;
 use App\Models\Characteristic;
 use App\Models\Image;
 use App\Models\ImageType;
-use App\Models\Star;
+use App\Models\Rarity;
 use App\Models\Weapon;
 use App\Models\WeaponType;
 use App\Services\LevelService;
@@ -47,12 +47,12 @@ class WeaponController extends Controller
      */
     public function create()
     {
-        $stars = Star::all();
+        $rarities = Rarity::all();
         $weaponTypes = WeaponType::all();
         $subStats = Characteristic::getWeaponCharacteristics();
 
         $data = [
-            'stars' => $stars,
+            'rarities' => $rarities,
             'weapon_types' => $weaponTypes,
             'sub_stats' => $subStats
         ];
@@ -108,7 +108,7 @@ class WeaponController extends Controller
      */
     public function show($id)
     {
-        $stars = Star::all();
+        $rarities = Rarity::all();
         $weaponTypes = WeaponType::all();
         $weaponLevels = (new LevelService())->getWeaponLevelsWithAscensions();
         $subStats = Characteristic::getWeaponCharacteristics();
@@ -130,7 +130,7 @@ class WeaponController extends Controller
 
         $data = [
             'weapon'       => $weapon,
-            'stars'        => $stars,
+            'rarities'        => $rarities,
             'weapon_types' => $weaponTypes,
             'sub_stats'    => $subStats,
             'levels'       => $weaponLevels

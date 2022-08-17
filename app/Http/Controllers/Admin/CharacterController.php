@@ -11,7 +11,7 @@ use App\Models\Characteristic;
 use App\Models\Element;
 use App\Models\Image;
 use App\Models\ImageType;
-use App\Models\Star;
+use App\Models\Rarity;
 use App\Models\WeaponType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -87,7 +87,7 @@ class CharacterController extends Controller
      */
     public function show($id)
     {
-        $stars = Star::all();
+        $rarities = Rarity::all();
         $weaponTypes = WeaponType::all();
         $elements = Element::all();
 
@@ -109,7 +109,7 @@ class CharacterController extends Controller
 
         $data = [
             'character' => $character,
-            'stars' => $stars,
+            'rarities' => $rarities,
             'weapon_types' => $weaponTypes,
             'elements' => $elements
         ];
@@ -139,7 +139,7 @@ class CharacterController extends Controller
         }
 
         $saveData = [
-            'star_id'        => $request->star_id,
+            'rarity_id'      => $request->rarity_id,
             'name'           => $request->name,
             'slug'           => $request->slug ?? null,
             'element_id'     => $request->element_id,
@@ -207,12 +207,12 @@ class CharacterController extends Controller
 
     public function create()
     {
-        $stars = Star::all();
+        $rarities = Rarity::all();
         $weaponTypes = WeaponType::all();
         $elements = Element::all();
 
         $data = [
-            'stars' => $stars,
+            'rarities' => $rarities,
             'weapon_types' => $weaponTypes,
             'elements' => $elements
         ];

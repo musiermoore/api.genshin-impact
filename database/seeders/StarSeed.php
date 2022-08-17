@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Star;
+use App\Models\Rarity;
 use Illuminate\Database\Seeder;
 
 class StarSeed extends Seeder
@@ -15,11 +15,11 @@ class StarSeed extends Seeder
     public function run()
     {
         $data = [
-            ['star' => 1],
-            ['star' => 2],
-            ['star' => 3],
-            ['star' => 4],
-            ['star' => 5]
+            ['rarity' => 1],
+            ['rarity' => 2],
+            ['rarity' => 3],
+            ['rarity' => 4],
+            ['rarity' => 5]
         ];
 
         $data = array_map(function ($item) {
@@ -29,6 +29,6 @@ class StarSeed extends Seeder
             return $item;
         }, $data);
 
-        Star::insert($data);
+        Rarity::insert($data);
     }
 }
