@@ -11,7 +11,7 @@ class Character extends Model
     use HasFactory;
 
     protected $fillable = [
-        'star_id',
+        'rarity_id',
         'name',
         'slug',
         'element_id',
@@ -28,7 +28,7 @@ class Character extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function star()
+    public function rarity()
     {
         return $this->belongsTo(Rarity::class);
     }
@@ -65,13 +65,13 @@ class Character extends Model
         return Character::query()
             ->select([
                 DB::raw('characters.id, characters.name, characters.slug'),
-                DB::raw('stars.star, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'),
+                DB::raw('rarities.rarity, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'),
                 DB::raw('elements.element, elements.slug AS element_slug'),
                 DB::raw('images.path AS image_path, image_types.type AS image_type, image_types.slug AS image_slug')
             ])
             ->leftJoin('elements', 'elements.id', '=', 'characters.element_id')
             ->leftJoin('weapon_types', 'weapon_types.id', '=', 'characters.weapon_type_id')
-            ->leftJoin('stars', 'stars.id', '=', 'characters.star_id')
+            ->leftJoin('rarities', 'rarities.id', '=', 'characters.rarity_id')
             ->leftJoin('images', function ($join) {
                 $join->on('images.imageable_id', '=', 'characters.id');
                 $join->where('images.imageable_type', '=', Character::class);

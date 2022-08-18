@@ -94,7 +94,7 @@ class CharacterController extends Controller
         $character = Character::query()
             ->with(
                 'element',
-                'star',
+                'rarity',
                 'weaponType',
                 'image',
                 'characterLevels.level',

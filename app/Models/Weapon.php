@@ -12,7 +12,7 @@ class Weapon extends Model
 
     protected $fillable = [
         'weapon_type_id',
-        'star_id',
+        'rarity_id',
         'name',
         'slug',
         'main_characteristic_id',
@@ -29,7 +29,7 @@ class Weapon extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function star()
+    public function rarity()
     {
         return $this->belongsTo(Rarity::class);
     }
@@ -71,7 +71,7 @@ class Weapon extends Model
                     'weapons.id AS weapon_id, weapons.name AS weapon_name, weapons.slug AS weapon_slug, weapons.sub_stat_id'
                 ),
                 DB::raw(
-                    'stars.star, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'
+                    'rarities.rarity, weapon_types.type AS weapon_type, weapon_types.slug AS weapon_type_slug'
                 ),
                 DB::raw(
                     'weapon_characteristics.id AS weapon_characteristics_id, levels.level, ascensions.ascension'
@@ -100,9 +100,9 @@ class Weapon extends Model
             ->leftJoin('characteristics',
                 'weapons.sub_stat_id', '=', 'characteristics.id'
             )
-            ->leftJoin('stars', 'weapons.star_id', '=', 'stars.id')
+            ->leftJoin('rarities', 'weapons.rarity_id', '=', 'rarities.id')
             ->leftJoin('weapon_types', 'weapons.weapon_type_id', '=', 'weapon_types.id')
-            ->orderBy('stars.star')
+            ->orderBy('rarities.rarity')
             ->orderBy('weapons.name')
             ->orderBy('ascensions.ascension')
             ->orderBy('levels.level')
@@ -141,8 +141,8 @@ class Weapon extends Model
                     ]
                 ];
 
-                // stars
-                $groupedWeapons[$weaponId]['star']['star'] = $weapon['star'];
+                // rarities
+                $groupedWeapons[$weaponId]['rarity']['rarity'] = $weapon['rarity'];
 
                 // weapon types
                 $groupedWeapons[$weaponId]['weapon_type'] = [
