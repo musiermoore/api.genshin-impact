@@ -10,8 +10,13 @@ class Rarity extends Model
     use HasFactory;
 
     protected $fillable = [
-        'star',
+        'rarity',
         'created_at',
         'updated_at'
     ];
+
+    public function artifactSets()
+    {
+        $this->belongsToMany(ArtifactSet::class);
+    }
 }

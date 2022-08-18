@@ -42,4 +42,9 @@ class ArtifactSet extends Model
     {
         return $this->hasMany(Artifact::class);
     }
+
+    public function rarities()
+    {
+        $this->belongsToMany(Rarity::class);
+    }
 }
