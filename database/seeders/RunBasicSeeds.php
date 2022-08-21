@@ -20,7 +20,7 @@ class RunBasicSeeds extends Seeder
             LevelSeed::class,
             ServerSeed::class,
             SkillTypeSeed::class,
-            StarSeed::class,
+            RaritySeed::class,
             WeaponTypeSeed::class,
             ArtifactTypeSeed::class,
             ImageTypeSeeder::class

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Rarity;
 use Illuminate\Database\Seeder;
 
-class StarSeed extends Seeder
+class RaritySeed extends Seeder
 {
     /**
      * Run the database seeds.
