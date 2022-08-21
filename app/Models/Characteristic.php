@@ -30,6 +30,22 @@ class Characteristic extends Model
         return $this->belongsTo(CharacteristicType::class);
     }
 
+    public function baseArtifactValues()
+    {
+        return $this->belongsToMany(
+            Rarity::class,
+            'artifact_base_characteristics'
+        )->withPivot(['value', 'level']);
+    }
+
+    public function extraArtifactValues()
+    {
+        return $this->belongsToMany(
+            Rarity::class,
+            'artifact_extra_characteristics'
+        )->withPivot(['value', 'tier']);
+    }
+
     public static function getWeaponCharacteristics()
     {
         $hideCharacteristics = [
