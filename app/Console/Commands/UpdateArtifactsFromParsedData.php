@@ -6,6 +6,7 @@ use App\Http\Traits\ImageUpload;
 use App\Models\ArtifactSet;
 use App\Models\ArtifactType;
 use App\Models\ImageType;
+use App\Models\Rarity;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -95,6 +96,7 @@ class UpdateArtifactsFromParsedData extends Command
             $pathToArtifactSet = $this->concatPaths([$pathToArtifactImages, $artifactSet['slug']]);
 
             $artifactSetModel = $this->createArtifactSet($artifactSet);
+            $this->setRaritiesToArtifactSet($artifactSetModel, $artifactSet['rarities']);
 
             if (!empty($artifactSet['artifacts'])) {
                 $this->createArtifacts($artifactSetModel, $artifactSet['artifacts'], $pathToArtifactSet);
@@ -107,13 +109,23 @@ class UpdateArtifactsFromParsedData extends Command
     private function createArtifactSet($artifactSet)
     {
         return ArtifactSet::query()
-            ->firstOrCreate([
+            ->updateOrCreate([
                 'slug' => $artifactSet['slug']
             ],
             [
                 'name' => $artifactSet['name'],
                 'slug' => $artifactSet['slug']
             ]);
+    }
+
+    private function setRaritiesToArtifactSet($artifactSet, $artifactSetRarities)
+    {
+        $rarityIds = Rarity::query()
+            ->whereIn('rarity', $artifactSetRarities)
+            ->pluck('id')
+            ->toArray();
+
+        $artifactSet->rarities()->sync($rarityIds);
     }
 
     private function createArtifacts($artifactSet, $artifacts, $pathToArtifactSet = null)
@@ -161,7 +173,7 @@ class UpdateArtifactsFromParsedData extends Command
         $artifactTypeId = ArtifactType::getArtifactTypeIdBySlug($artifact['type']);
 
         return $artifactSet->artifacts()
-            ->firstOrCreate([
+            ->updateOrCreate([
                 'slug' => $artifact['slug']
             ],
             [
